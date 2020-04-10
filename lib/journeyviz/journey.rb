@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'journeyviz/has_screens'
+require 'journeyviz/block'
+
 module Journeyviz
   class Journey
     include HasScreens

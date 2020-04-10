@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'journeyviz/version'
+require 'journeyviz/journey'
 
 module Journeyviz
   class Error < StandardError; end

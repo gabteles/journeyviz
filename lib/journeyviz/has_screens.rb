@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'journeyviz/screen'
+
 module Journeyviz
   module HasScreens
     def screen(name, &definition)

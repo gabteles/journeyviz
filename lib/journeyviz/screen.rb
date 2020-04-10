@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'journeyviz/action'
+
 module Journeyviz
   class Screen
     def initialize(name)
