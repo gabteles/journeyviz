@@ -6,6 +6,7 @@ require 'journeyviz/journey'
 module Journeyviz
   class Error < StandardError; end
   class InvalidNameError < Error; end
+  class DuplicatedDefinition < Error; end
 
   module_function
 

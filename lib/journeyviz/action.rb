@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 
+require 'journeyviz/normalized_name'
+
 module Journeyviz
   class Action
-    attr_reader :name, :transitions
+    include NormalizedName
+
+    attr_reader :transitions
 
     def initialize(name, transitions: [])
-      @name = name
+      assign_normalize_name(name)
       @transitions = transitions
     end
   end

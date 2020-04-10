@@ -4,13 +4,16 @@ require 'journeyviz/screen'
 
 module Journeyviz
   module HasScreens
-    def screen(name, &definition)
-      # TODO: Validate name
+    def screen(name)
+      @screens ||= []
       screen = Screen.new(name)
 
-      @screens ||= []
-      @screens << screen
-      definition.call(screen)
+      if screens.any? { |defined_screen| screen.name == defined_screen.name }
+        raise DuplicatedDefinition, "Duplicated screen name: #{name}"
+      end
+
+      screens.push(screen)
+      yield screen if block_given?
     end
 
     attr_reader :screens
