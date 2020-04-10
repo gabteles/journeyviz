@@ -5,6 +5,10 @@ module Journeyviz
     include HasScreens
 
     def initialize(name)
+      unless name.to_s.size.positive?
+        raise InvalidNameError, "Invalid block name given: #{name.inspect}"
+      end
+
       @name = name
     end
 
