@@ -1,4 +1,6 @@
-require "journeyviz/version"
+# frozen_string_literal: true
+
+require 'journeyviz/version'
 
 module Journeyviz
   class Error < StandardError; end
