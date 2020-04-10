@@ -2,5 +2,11 @@ require "journeyviz/version"
 
 module Journeyviz
   class Error < StandardError; end
-  # Your code goes here...
+
+  module_function
+
+  def configure(&block)
+    journey = Journey.new
+    block.call(journey)
+  end
 end
