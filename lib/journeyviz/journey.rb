@@ -1,26 +1,34 @@
 # frozen_string_literal: true
 
-require 'journeyviz/has_screens'
+require 'journeyviz/node_group'
 require 'journeyviz/block'
 
 module Journeyviz
   class Journey
-    include HasScreens
-    attr_reader :blocks
+    include NodeGroup
 
     def initialize
       @blocks = []
     end
 
-    def block(name, &definition)
-      block = Block.new(name)
-
-      if blocks.any? { |defined_block| block.name == defined_block.name }
-        raise DuplicatedDefinition, "Duplicated block name: #{name}"
+    def validate!
+      screens.each do |screen|
+        screen.actions.each { |action| validate_action(action) }
       end
+    end
 
-      @blocks << block
-      definition.call(block)
+    private
+
+    def validate_action(action)
+      invalid_transition = action.transitions.find_index(nil)
+      return unless invalid_transition
+
+      transition_definition = action.raw_transitions[invalid_transition]
+
+      message = "Action #{action.name.inspect} "
+      message += "on screen #{action.screen.full_qualifier.inspect} "
+      message += "has invalid transition: #{transition_definition.inspect}"
+      raise(Journeyviz::InvalidTransition, message)
     end
   end
 end

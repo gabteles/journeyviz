@@ -1,15 +1,18 @@
 # frozen_string_literal: true
 
 require 'journeyviz/normalized_name'
-require 'journeyviz/has_screens'
+require 'journeyviz/node_group'
+require 'journeyviz/scopable'
 
 module Journeyviz
   class Block
     include NormalizedName
-    include HasScreens
+    include NodeGroup
+    include Scopable[:name]
 
-    def initialize(name)
+    def initialize(name, scope = nil)
       assign_normalize_name(name)
+      assign_scope(scope)
     end
   end
 end

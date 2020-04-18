@@ -6,7 +6,11 @@ RSpec.describe Journeyviz::Block do
 
   it_behaves_like 'having a normalized name'
 
-  it_behaves_like 'having screens' do
+  it_behaves_like 'node group' do
     let(:instance) { described_class.new(:foobar) }
+  end
+
+  it_behaves_like 'scopable' do
+    let(:instance) { described_class.new(qualifier, scope) }
   end
 end
