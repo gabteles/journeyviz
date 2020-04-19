@@ -7,23 +7,21 @@ module Journeyviz
     include NormalizedName
     attr_reader :screen
 
-    def initialize(name, screen, transitions: [])
+    def initialize(name, screen, transition: nil)
       assign_normalize_name(name)
       @screen = screen
-      @transitions = transitions
+      @transition = transition
     end
 
-    def transitions
-      @transitions.map do |transition|
-        case transition
-        when Symbol then find_screen_by_name(transition)
-        when Array then find_screen_by_full_qualifier(transition)
-        end
+    def transition
+      case @transition
+      when Symbol then find_screen_by_name(@transition)
+      when Array then find_screen_by_full_qualifier(@transition)
       end
     end
 
-    def raw_transitions
-      @transitions
+    def raw_transition
+      @transition
     end
 
     private

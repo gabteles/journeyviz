@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
 RSpec.describe Journeyviz::Action do
-  let(:instance) { described_class.new(name, screen, transitions: transitions) }
+  let(:instance) { described_class.new(name, screen, transition: transition) }
   let(:name) { :foobar }
   let(:screen) { Journeyviz::Screen.new(:foobar_screen) }
-  let(:transitions) { [] }
+  let(:transition) { [] }
 
   it_behaves_like 'having a normalized name' do
     subject { instance }
   end
 
-  describe '#transitions' do
-    subject { instance.transitions }
+  describe '#transition' do
+    subject { instance.transition }
 
     let!(:journey) { Journeyviz::Journey.new }
     let!(:block) { journey.block(:same_block) {} }
@@ -38,61 +38,53 @@ RSpec.describe Journeyviz::Action do
 
     context 'when transition is a Symbol' do
       context 'and screen does not exist' do
-        let(:transitions) { [:screen_does_not_exists] }
-
-        it 'will be nil' do
-          is_expected.to eq [nil]
-        end
+        let(:transition) { :screen_does_not_exists }
+        it { is_expected.to be_nil }
       end
 
       context 'and screen exists in same scope' do
-        let(:transitions) { [:screen_in_same_scope] }
+        let(:transition) { :screen_in_same_scope }
 
         it 'finds screen' do
-          is_expected.to eq [screen_in_same_scope]
+          is_expected.to eq screen_in_same_scope
         end
       end
 
       context 'and screen exists in upper scope' do
-        let(:transitions) { [:root_screen] }
+        let(:transition) { :root_screen }
 
         it 'finds screen' do
-          is_expected.to eq [root_screen]
+          is_expected.to eq root_screen
         end
       end
 
       context 'and screen exists but in non related journey branch' do
-        let(:transitions) { [:screen_in_other_block] }
-
-        it 'will be nil' do
-          is_expected.to eq [nil]
-        end
+        let(:transition) { :screen_in_other_block }
+        it { is_expected.to be_nil }
       end
 
       context 'and screen is ambiguous' do
-        let(:transitions) { [:ambiguous_screen] }
+        let(:transition) { :ambiguous_screen }
 
         it 'prefers closer screen' do
-          is_expected.to eq [closer_ambiguous_screen]
+          is_expected.to eq closer_ambiguous_screen
         end
       end
     end
 
     context 'when transition is an full qualifier (array)' do
       context 'and screen exists' do
-        let(:transitions) { [%i[other_block screen_in_other_block]] }
+        let(:transition) { %i[other_block screen_in_other_block] }
 
         it 'finds screen' do
-          is_expected.to eq [screen_in_other_block]
+          is_expected.to eq screen_in_other_block
         end
       end
 
       context 'and screen does not exist' do
-        let(:transitions) { [%i[other_block screen_does_not_exists]] }
+        let(:transition) { %i[other_block screen_does_not_exists] }
 
-        it 'will be nil' do
-          is_expected.to eq [nil]
-        end
+        it { is_expected.to be_nil }
       end
     end
   end

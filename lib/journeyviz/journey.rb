@@ -20,14 +20,11 @@ module Journeyviz
     private
 
     def validate_action(action)
-      invalid_transition = action.transitions.find_index(nil)
-      return unless invalid_transition
-
-      transition_definition = action.raw_transitions[invalid_transition]
+      return if action.transition || !action.raw_transition
 
       message = "Action #{action.name.inspect} "
       message += "on screen #{action.screen.full_qualifier.inspect} "
-      message += "has invalid transition: #{transition_definition.inspect}"
+      message += "has invalid transition: #{action.raw_transition.inspect}"
       raise(Journeyviz::InvalidTransition, message)
     end
   end

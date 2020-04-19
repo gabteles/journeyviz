@@ -7,7 +7,7 @@ RSpec.describe Journeyviz do
         expect do
           Journeyviz.configure do |journey|
             journey.screen(:one) do |screen|
-              screen.action :foobar, transitions: [:non_existing_screen]
+              screen.action :foobar, transition: :non_existing_screen
             end
           end
         end.to raise_error(Journeyviz::InvalidTransition)
