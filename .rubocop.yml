@@ -26,3 +26,7 @@ Style/AsciiComments:
 Metrics/BlockLength:
   Exclude:
     - spec/**/*
+
+Lint/AmbiguousBlockAssociation:
+  Exclude:
+    - spec/**/*

@@ -9,16 +9,38 @@ module Journeyviz
   class DuplicatedDefinition < Error; end
   class InvalidTransition < Error; end
 
-  module_function
+  class << self
+    def configure(&block)
+      block.call(journey)
+      journey.validate!
+    end
 
-  def configure(&block)
-    journey = Journey.new
-    block.call(journey)
-    journey.validate!
-    @journey = journey
-  end
+    def identify(user_id)
+      context[:user_id] = user_id
+    end
 
-  def journey
-    @journey
+    def visit(screen)
+      # TODO
+      # screen/day/:day/visits ++
+      # screen/week/:week/visits ++
+      # screen/month/:month/visits ++
+      # screen/quarter/:quarter/visits ++
+    end
+
+    def act(action)
+      # TODO
+      # :action/day/:day ++
+      # :action/week/:week ++
+      # :action/month/:month ++
+      # :action/quarter/:quarter ++
+    end
+
+    def context
+      Thread.current[:journeyviz_context] ||= {}
+    end
+
+    def journey
+      @journey ||= Journey.new
+    end
   end
 end
