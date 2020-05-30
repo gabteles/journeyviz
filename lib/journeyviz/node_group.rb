@@ -9,11 +9,12 @@ module Journeyviz
     def block(name, &definition)
       block = Block.new(name, self)
 
-      if blocks.any? { |defined_block| block.name == defined_block.name }
+      @blocks ||= []
+      if @blocks.any? { |defined_block| block.name == defined_block.name }
         raise DuplicatedDefinition, "Duplicated block name: #{name}"
       end
 
-      blocks.push(block)
+      @blocks.push(block)
       definition.call(block)
       block
     end
@@ -42,6 +43,14 @@ module Journeyviz
 
     def find_screen(qualifier)
       screens.find { |screen| screen.full_qualifier == qualifier }
+    end
+
+    def outputs
+      screens
+        .flat_map(&:actions)
+        .map(&:transition)
+        .compact
+        .reject { |screen| screens.include?(screen) }
     end
   end
 end

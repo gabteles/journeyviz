@@ -76,4 +76,21 @@ RSpec.shared_examples 'node group' do
       end
     end
   end
+
+  describe '#outputs' do
+    subject { instance.outputs }
+
+    let(:screen3) { double(:screen, actions: [double(:action, transition: screen4)]) }
+    let(:screen4) { Journeyviz::Screen.new(:foobar) }
+
+    before do
+      instance.screen(:screen1)
+      instance.screen(:screen2).action(:click, transition: :screen1)
+      instance.instance_variable_get(:@screens) << screen3
+    end
+
+    it 'returns screens defined outside instance' do
+      is_expected.to contain_exactly(screen4)
+    end
+  end
 end
