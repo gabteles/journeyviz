@@ -45,6 +45,20 @@ module Journeyviz
       screens.find { |screen| screen.full_qualifier == qualifier }
     end
 
+    def inputs
+      options = defined?(root_scope) ? root_scope.screens : []
+      self_screens = screens
+
+      options.select do |screen|
+        external_screen = !self_screens.include?(screen)
+        transitions_to_internal = screen.actions.any? do |action|
+          self_screens.include?(action.transition)
+        end
+
+        external_screen && transitions_to_internal
+      end
+    end
+
     def outputs
       screens
         .flat_map(&:actions)

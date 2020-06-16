@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 require 'journeyviz/node_group'
+require 'journeyviz/graphable'
 require 'journeyviz/block'
 
 module Journeyviz
   class Journey
     include NodeGroup
+    include Graphable
 
     def initialize
       @blocks = []
