@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     journeyviz (0.1.0)
+      rack-app
 
 GEM
   remote: https://rubygems.org/
@@ -13,6 +14,9 @@ GEM
     parallel (1.19.1)
     parser (2.7.1.0)
       ast (~> 2.4.0)
+    rack (2.2.2)
+    rack-app (7.6.4)
+      rack
     rainbow (3.0.0)
     rake (10.5.0)
     rexml (3.2.4)
