@@ -23,6 +23,10 @@ module Journeyviz
       @blocks ||= []
     end
 
+    def deep_blocks
+      blocks.flat_map { |block| [block] + block.deep_blocks }
+    end
+
     def screen(name)
       @screens ||= []
       screen = Screen.new(name, self)

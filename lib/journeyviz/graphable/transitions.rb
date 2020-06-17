@@ -37,7 +37,9 @@ module Journeyviz
           .flat_map(&:actions)
           .select { |action| screens.include?(action.transition) }
           .map do |action|
-            "input_#{graph_id(action.screen)} --- #{graph_id(action)} --> #{graph_id(action.transition)}"
+            target = action.transition
+            target_node = @screens.include?(target) ? target : @blocks.find { |block| block.screens.include?(target) }
+            "input_#{graph_id(action.screen)} --- #{graph_id(action)} --> #{graph_id(target_node)}"
           end
       end
 

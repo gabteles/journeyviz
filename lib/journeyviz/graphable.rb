@@ -35,6 +35,7 @@ module Journeyviz
       [
         'classDef screen fill:#373496,stroke:#373496,stroke-width:2px,color:#fff',
         'classDef transition fill:#fff,stroke:#373496,stroke-width:2px,color:#373496,stroke-dasharray: 5, 5',
+        'classDef block fill:#963734,color:#fff'
       ]
     end
 
