@@ -15,38 +15,38 @@ module Journeyviz
 
       def graph_transition_node(action)
         from_id = graph_id(action.screen)
-        to_id = graph_id(action.transition)
+        to_id = graph_target(action)
         "transition_#{from_id}_#{action.name}_#{to_id}(#{action.name}):::transition"
       end
 
       def graph_screen_transitions
-        self_outputs = outputs
-
         @screens
           .flat_map(&:actions)
           .select(&:transition)
-          .flat_map { |action| graph_screen_transition(action, self_outputs) }
+          .flat_map do |action|
+            [graph_transition_node(action), graph_screen_transition(action)]
+          end
       end
 
-      def graph_screen_transition(action, self_outputs)
-        suffix = self_outputs.include?(action.transition) ? 'output_' : ''
-        [
-          graph_transition_node(action),
-          "#{graph_id(action.screen)} --- #{graph_id(action)} --> #{suffix}#{graph_id(action.transition)}"
-        ]
+      def graph_screen_transition(action)
+        "#{graph_id(action.screen)} --- #{graph_id(action)} --> #{graph_target(action)}"
+      end
+
+      def graph_target(action)
+        target = action.transition
+
+        return "output_#{graph_id(target)}" if outputs.include?(target)
+
+        direct_children = (@blocks || []) + (@screens || [])
+        target = target.scope until direct_children.include?(target)
+        graph_id(target)
       end
 
       def graph_external_inputs
         inputs
           .flat_map(&:actions)
           .select { |action| screens.include?(action.transition) }
-          .map { |action| graph_external_input(action) }
-      end
-
-      def graph_external_input(action)
-        target = action.transition
-        target_node = @screens.include?(target) ? target : @blocks.find { |block| block.screens.include?(target) }
-        "input_#{graph_id(action.screen)} --- #{graph_id(action)} --> #{graph_id(target_node)}"
+          .map { |action| "input_#{graph_screen_transition(action)}" }
       end
 
       def graph_block_transitions

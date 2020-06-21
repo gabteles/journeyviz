@@ -55,11 +55,7 @@ module Journeyviz
         screen
           .actions
           .select { |action| screens.include?(action.transition) }
-          .map do |action|
-            from_id = graph_id(action.screen)
-            to_id = graph_id(action.transition)
-            "transition_#{from_id}_#{action.name}_#{to_id}(#{action.name}):::transition"
-          end
+          .map { |action| "#{graph_id(action)}(#{action.name}):::transition" }
       end
 
       def graph_external_block(block, chain, sufix)

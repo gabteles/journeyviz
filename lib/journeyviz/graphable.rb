@@ -57,7 +57,7 @@ module Journeyviz
 
     def action_id(node)
       from_id = graph_id(node.screen)
-      to_id = graph_id(node.transition)
+      to_id = graph_target(node)
       "transition_#{from_id}_#{node.name}_#{to_id}"
     end
   end
