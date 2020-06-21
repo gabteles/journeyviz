@@ -19,12 +19,14 @@ module Journeyviz
       block
     end
 
-    def blocks
+    def blocks(include_children: false)
       @blocks ||= []
-    end
 
-    def deep_blocks
-      blocks.flat_map { |block| [block] + block.deep_blocks }
+      if include_children
+        @blocks.flat_map { |block| [block] + block.blocks(include_children: true) }
+      else
+        @blocks
+      end
     end
 
     def screen(name)
@@ -50,16 +52,13 @@ module Journeyviz
     end
 
     def inputs
-      options = defined?(root_scope) ? root_scope.screens : []
+      options = defined?(root_scope) && root_scope ? root_scope.screens : []
+      external_screens = options - screens
       self_screens = screens
-
-      options.select do |screen|
-        external_screen = !self_screens.include?(screen)
-        transitions_to_internal = screen.actions.any? do |action|
+      external_screens.select do |screen|
+        screen.actions.any? do |action|
           self_screens.include?(action.transition)
         end
-
-        external_screen && transitions_to_internal
       end
     end
 
