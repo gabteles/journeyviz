@@ -41,17 +41,24 @@ module Journeyviz
 
     def graph_id(node)
       case node
-      when Journeyviz::Screen
-        suffix = node.full_qualifier.join('_')
-        "screen_#{suffix}"
-      when Journeyviz::Block
-        suffix = node.full_qualifier.join('_')
-        "block_#{suffix}"
-      when Journeyviz::Action
-        from_id = graph_id(node.screen)
-        to_id = graph_id(node.transition)
-        "transition_#{from_id}_#{node.name}_#{to_id}"
+      when Journeyviz::Screen then screen_id(node)
+      when Journeyviz::Block then block_id(node)
+      when Journeyviz::Action then action_id(node)
       end
+    end
+
+    def screen_id(node)
+      "screen_#{node.full_qualifier.join('_')}"
+    end
+
+    def block_id(node)
+      "block_#{node.full_qualifier.join('_')}"
+    end
+
+    def action_id(node)
+      from_id = graph_id(node.screen)
+      to_id = graph_id(node.transition)
+      "transition_#{from_id}_#{node.name}_#{to_id}"
     end
   end
 end
