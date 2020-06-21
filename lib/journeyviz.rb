@@ -12,6 +12,7 @@ module Journeyviz
 
   class << self
     def configure(&block)
+      @journey = Journey.new
       block.call(journey)
       journey.validate!
     end

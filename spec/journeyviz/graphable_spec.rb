@@ -10,11 +10,14 @@ RSpec.describe Journeyviz::Graphable do
       screen.action :deep_action, transition: %i[big_block1 screen1]
     end
 
-    journey.screen :other_top_level
+    journey.screen :other_top_level do |screen|
+      screen.action :other_deep_action, transition: %i[big_block2 screen2]
+    end
 
     journey.block :big_block1 do |block|
       block.screen(:screen1) do |screen|
         screen.action :action1, transition: %i[big_block2 screen2]
+        screen.action :action2, transition: :other_top_level
       end
     end
 
@@ -74,5 +77,51 @@ RSpec.describe Journeyviz::Graphable do
 
   it 'will not include outputs when there is no one' do
     is_expected.to_not include('subgraph outputs')
+  end
+
+  context 'when there are inputs' do
+    let(:instance) { journey.blocks[1] } # big_block2
+
+    it 'includes inputs group' do
+      is_expected.to include('subgraph inputs')
+    end
+
+    it 'includes inputs from top level with their transitions' do
+      from_id = 'screen_other_top_level'
+      to_id = 'screen_big_block2_screen2'
+      transition_id = "transition_#{from_id}_other_deep_action_#{to_id}"
+
+      is_expected
+        .to include("input_#{from_id}[other_top_level]:::external_screen")
+        .and include("#{transition_id}(other_deep_action):::transition")
+        .and include("input_#{from_id} --- #{transition_id} --> #{to_id}")
+    end
+
+    it 'includes blocks when inputs are not top level' do
+      is_expected.to include('subgraph input_block_big_block1[big_block1]')
+    end
+  end
+
+  context 'when there are outputs' do
+    let(:instance) { journey.blocks[0] } # big_block1
+
+    it 'includes outputs group' do
+      is_expected.to include('subgraph outputs')
+    end
+
+    it 'includes outputs to top level with their transitions' do
+      from_id = 'screen_big_block1_screen1'
+      to_id = 'output_screen_other_top_level'
+      transition_id = "transition_#{from_id}_action2_#{to_id}"
+
+      is_expected
+        .to include("#{to_id}[other_top_level]:::external_screen")
+        .and include("#{transition_id}(action2):::transition")
+        .and include("#{from_id} --- #{transition_id} --> #{to_id}")
+    end
+
+    it 'includes blocks when outputs are not top level' do
+      is_expected.to include('subgraph output_block_big_block2[big_block2]')
+    end
   end
 end
