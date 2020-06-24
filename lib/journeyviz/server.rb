@@ -5,7 +5,10 @@ require 'rack/app'
 module Journeyviz
   class Server < Rack::App
     get '/' do
-      @blocks = [Journeyviz.journey] + Journeyviz.journey.blocks(include_children: true)
+      block_path = params['block'] || ''
+      @block = block_path.split('_').reduce(Journeyviz.journey) do |current, step|
+        current.blocks.find { |block| block.name == step.to_sym }
+      end
 
       path = File.expand_path('server/index.html.erb', __dir__)
       ERB.new(File.read(path)).result(binding)
