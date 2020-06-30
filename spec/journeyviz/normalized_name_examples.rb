@@ -30,4 +30,16 @@ RSpec.shared_examples 'having a normalized name' do
       end
     end
   end
+
+  context 'when name contains an exclamation' do
+    let(:name) { 'foo!bar' }
+
+    it 'raises error' do
+      expect { subject }
+        .to raise_error(
+          Journeyviz::InvalidNameError,
+          "Invalid character `!` on `#{name.inspect}`"
+        )
+    end
+  end
 end

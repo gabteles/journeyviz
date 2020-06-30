@@ -11,6 +11,8 @@ module Journeyviz
         raise InvalidNameError, "Invalid name given: #{name.inspect}"
       end
 
+      raise(InvalidNameError, "Invalid character `!` on `#{name.inspect}`") if name.to_s.include?('!')
+
       @name = name.to_sym
     end
   end
