@@ -30,3 +30,6 @@ Metrics/BlockLength:
 Lint/AmbiguousBlockAssociation:
   Exclude:
     - spec/**/*
+
+Layout/EndOfLine:
+  Enabled: false
