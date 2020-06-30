@@ -4,6 +4,8 @@ Journeyviz is a journey visualization gem. It defines journey as code so it can 
 
 When defined, you can view your journey through a [rack](https://github.com/rack/rack) application.
 
+Supports Ruby 2.6.x officially.
+
 ## Installation
 
 Add this line to your application's Gemfile:

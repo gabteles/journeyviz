@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    journeyviz (0.1.0)
+    journeyviz (0.2.0)
       rack-app
 
 GEM
