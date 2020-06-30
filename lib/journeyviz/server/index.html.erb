@@ -78,7 +78,7 @@
           </a>
           <hr/>
           <% @block.blocks.each do |block| %>
-            <a class="mdl-navigation__link" href="?block=<%= block.full_qualifier.join('_') %>">
+            <a class="mdl-navigation__link" href="?block=<%= block.full_qualifier.join('!') %>">
               <i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">layers</i>
               <span><%= block.name.to_s.split('_').collect(&:capitalize).join(' ') %></span>
             </a>
