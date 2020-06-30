@@ -1,8 +1,8 @@
 # Journeyviz
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/journeyviz`. To experiment with that code, run `bin/console` for an interactive prompt.
+Journeyviz is a journey visualization gem. It defines journey as code so it can be versioned together with changes.
 
-TODO: Delete this and the text above, and describe your gem
+When defined, you can view your journey through a [rack](https://github.com/rack/rack) application.
 
 ## Installation
 
@@ -22,7 +22,65 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+
+### Defining the journey
+
+Start by defining a journey. It is consisted of for elements: blocks, screens, actions and transitions.
+
+Let's start from screens:
+
+```ruby
+# This is the journey definition block
+Journeyviz.configure do |journey|
+  # Here we're defining a screen called landing page
+  journey.screen :landing_page
+end
+```
+
+Now supose our landing page has a share button and we'd like to include it into our journey. We should define an action to represent it.
+
+```ruby
+Journeyviz.configure do |journey|
+  journey.screen :landing_page do |landing|
+    # Landing has an action called :share
+    landing.action :share
+  end
+end
+```
+
+Imagine that the landing page also has an login form that sends the user to a logged-in area, into a dashboard page. Now we're going to use blocks and transitions.
+
+```ruby
+Journeyviz.configure do |journey|
+  journey.screen :landing_page do |landing|
+    landing.action :share
+    # Define an action `login` that transitions the user to dashboard page
+    # %i[logged dashboard] is the path to that screen. It includes every
+    # block and finally the screen name.
+    landing.action :login, transition: %i[logged dashboard]
+  end
+
+  # Defining the logged area
+  journey.block :logged do |logged_area|
+    # Dashboard inside logged area
+    logged_area.screen :dashboard
+
+    # Blocks can have blocks, you can call `logged_area.block :sublock` how many
+    # times you want.
+  end
+end
+```
+
+### Visualizing journey
+
+With journey definition loaded, you just have to mount the journeyviz server into your
+rack application with `mount` command:
+
+```ruby
+mount Journeyviz::Server => '/journeyviz'
+```
+
+No just go to `/journeyviz` path on your application!
 
 ## Development
 
@@ -32,7 +90,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/journeyviz.
+Bug reports and pull requests are welcome on GitHub at https://github.com/gabteles/journeyviz.
 
 ## License
 
