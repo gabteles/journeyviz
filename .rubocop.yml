@@ -32,4 +32,4 @@ Lint/AmbiguousBlockAssociation:
     - spec/**/*
 
 Layout/EndOfLine:
-  Enabled: false
+  EnforcedStyle: lf
