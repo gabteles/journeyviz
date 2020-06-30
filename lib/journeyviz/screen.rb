@@ -17,7 +17,7 @@ module Journeyviz
     end
 
     def action(name, **params)
-      action = Action.new(name, self, params)
+      action = Action.new(name, self, **params)
 
       if actions.any? { |defined_action| action.name == defined_action.name }
         raise DuplicatedDefinition, "Duplicated action name: #{name}"
